@@ -1,7 +1,7 @@
 ﻿// RayTracingInOneWeekend.cpp : Defines the entry point for the application.
 //
 
-#include "RayTracingInOneWeekend.h"
+#include "main.h"
 #include "vec3.h"
 #include "color.h"
 
