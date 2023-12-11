@@ -1,18 +1,18 @@
 #pragma once
 
-#include <math>
+#include <cmath>
 #include <iostream>
 
 using namespace std;
 
 class vec3 {
 public:
-	vec3() : e{ 0, 0, 0 } {};
-	vec3(double x, double y, double z) : {x, y, z} {}
+	vec3() : e{ 0, 0, 0 } {}
+	vec3(double x, double y, double z) : e{x, y, z} {}
 
-	double x() const { return e[0] };
-	double y() const { return e[1] };
-	double z() const { return e[2] };
+	double x() const { return e[0]; }
+	double y() const { return e[1]; }
+	double z() const { return e[2]; }
 
 	vec3 operator-() const { 
 		return vec3(-e[0], -e[1], -e[2]); 
@@ -22,7 +22,7 @@ public:
 		return e[i];
 	}
 
-	double& operator[](int i) const {
+	double& operator[](int i) {
 		return e[i];
 	}
 
@@ -90,11 +90,11 @@ inline double dot(const vec3& u, const vec3& v) {
 	return u[0] * v[0] + u[1] * v[1] + u[2] * v[2];
 }
 
-inline double cross(const vec3& u, const vec3& v) {
+inline vec3 cross(const vec3& u, const vec3& v) {
 	return vec3(
 			u[1] * v[2] - u[2] * v[1],
 			u[2] * v[0] - u[0] * v[1],
-			u[0] * v[1] - u[1] * b[0]
+			u[0] * v[1] - u[1] * v[0]
 		);
 }
 
