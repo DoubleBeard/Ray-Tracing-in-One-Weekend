@@ -1,4 +1,4 @@
-// RayTracingInOneWeekend.cpp : Defines the entry point for the application.
+﻿// RayTracingInOneWeekend.cpp : Defines the entry point for the application.
 //
 
 #include "main.h"
@@ -12,7 +12,21 @@ const double SCALE = 400;
 using namespace std;
 
 
+bool hitSphere(const point3& center, double radius, const ray& r) {
+	vec3 oc = r.origin() - center;
+	auto a = dot(r.direction(), r.direction());
+	auto b = 2.0 * dot(oc, r.direction());
+	auto c = dot(oc, oc) - radius * radius;
+	auto discriminant = b * b - 4 * a * c;
+	return discriminant >= 0;
+}
+
+
 color rayColor(const ray& r) {
+	if (hitSphere(point3(0, 0, -1), 0.5, r)) {
+		return color(1, 0, 0);
+	}
+
 	auto unitDirection = unitVector(r.direction());
 	auto a = 0.5 * (unitDirection.y() + 1.0);  // y is between -1 and 1 so this turns it into 0 to 1.
 	return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);  // Blend values from y = 1 (blue) to y = 0 (white)
