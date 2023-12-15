@@ -1,4 +1,4 @@
-﻿// RayTracingInOneWeekend.cpp : Defines the entry point for the application.
+// RayTracingInOneWeekend.cpp : Defines the entry point for the application.
 //
 
 #include "main.h"
@@ -34,7 +34,7 @@ int main()
 
 	float focalLength = 1.0;
 	double viewportHeight = 2.0;
-	double viewportWidth = viewportHeight * (static_cast<double>(imageWidth) / imageWidth);
+	double viewportWidth = viewportHeight * (static_cast<double>(imageWidth) / imageHeight);
 	auto cameraCenter = point3(0, 0, 0);
 
 	// Calucalte the vectors across the horizontal and down the vertical viewport edges
