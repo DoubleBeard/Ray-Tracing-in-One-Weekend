@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ray.h"
+#include "interval.h"
 
 class RayHit {
 public:
@@ -19,5 +20,5 @@ class Hittable {
 public: 
 	virtual ~Hittable() = default;
 
-	virtual bool hit(const Ray& r, double rayTMin, double rayTMax, RayHit& rec) const = 0;
+	virtual bool hit(const Ray& r, Interval rayT, RayHit& rec) const = 0;
 };

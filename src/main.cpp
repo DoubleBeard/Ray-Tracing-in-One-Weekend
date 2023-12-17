@@ -1,16 +1,16 @@
-// RayTracingInOneWeekend.cpp : Defines the entry point for the application.
+﻿// RayTracingInOneWeekend.cpp : Defines the entry point for the application.
 //
 
 #include "main.h"
 
 const double ASPECT_RATIO = 16.0 / 9.0;
-const double SCALE = 400;
+const double SCALE = 1080;
 
 
 Color rayColor(const Ray& r, const Hittable& world) {
 	RayHit rec{};
 
-	if (world.hit(r, 0, 100, rec)) {
+	if (world.hit(r, Interval(0, DOUBLE_INFINITY), rec)) {
 		return 0.5 * (rec.normal + Vec3::one());
 	} 
 

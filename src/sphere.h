@@ -3,12 +3,11 @@
 #include "hittable.h"
 #include "vec3.h"
 
-
 class Sphere : public Hittable {
 public: 
 	Sphere(Point _center, double _radius) : center(_center), radius(_radius) {}
 
-	bool hit(const Ray& r, double rayTMin, double rayTMax, RayHit& rec) const override{
+	bool hit(const Ray& r, Interval rayT, RayHit& rec) const override{
 		Vec3 oc = r.origin() - center;
 		auto a = r.direction().lengthSquared();
 		auto halfB = dot(oc, r.direction());
@@ -23,9 +22,9 @@ public:
 
 		// Checking if t found is within legit t
 		auto root = (-halfB - sqrtd) / a;
-		if (!(rayTMin <= root && root <= rayTMax)) {
+		if (!rayT.surrounds(root)) {
 			root = (-halfB + sqrtd) / a;
-			if (!(rayTMin <= root && root <= rayTMax)) {
+			if (!rayT.surrounds(root)) {
 				return false;
 			}
 		}

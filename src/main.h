@@ -22,7 +22,6 @@
 
 using namespace std;
 
-
 const double PI = 3.1415926535897932385;
 
 inline double degToRads(double degrees) {
