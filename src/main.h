@@ -11,9 +11,7 @@
 #include "hittable.h"
 #include "hittable_list.h"
 #include "interval.h"
-
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "third-party/stb/stb_image_write.h"
+#include "camera.h"
 
 #include <memory>
 #include <iostream>
