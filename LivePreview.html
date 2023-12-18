@@ -2,16 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="1"> <!-- Refresh the page every 5 seconds -->
     <title>Live PNG Viewer</title>
 </head>
 <body>
     <img src="src/out/build/x64-debug/output.png" alt="Live Image" id="liveImage">
     <script>
         setInterval(function() {
-            const image = document.getElementById('liveImage');
-            image.src = 'src/out/build/x64-debug/output.png?' + new Date().getTime(); // Appending the current time to bypass caching
-        }, 1000); 
+            var newImage = new Image();
+            newImage.onload = function() {
+                document.getElementById('liveImage').src = this.src;
+            };
+            newImage.src = 'src/out/build/x64-debug/output.png?' + new Date().getTime();
+        }, 100);
     </script>
 </body>
 </html>
