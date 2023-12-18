@@ -10,9 +10,9 @@
 
 class Camera {
 public:
-
 	double aspectRatio = 1.0;
 	double scale = 100;
+	int samplesPerPixel = 10;
 
 	void render(const Hittable& world) {
 		initialize();
@@ -21,12 +21,14 @@ public:
 		for (int j = 0; j < imageHeight; j++) {
 			clog << "\rScanlines remaining: " << (imageHeight - j) << ' ' << flush;
 			for (int i = 0; i < imageWidth; i++) {
-				auto pixelCenter = startingPixel + (i * pixelDeltaU) + (j * pixelDeltaV);
-				auto rayDirection = pixelCenter - center;
-				Ray r{ center, rayDirection };
+				Color pixelColor{ 0, 0, 0 };
+
+				for (int sample = 0; sample < samplesPerPixel; sample++) {
+					pixelColor += rayColor(getRandomRayForPixel(i, j), world);
+				}
 
 				int index = (j * imageWidth + i) * channels;
-				writeColor(image, index, rayColor(r, world));
+				writeColor(image, index, pixelColor, samplesPerPixel);
 			}
 		}
 
@@ -72,6 +74,20 @@ private:
 
 		auto viewportUpperLeft = center - Vec3(0, 0, focalLength) - viewportU / 2 - viewportV / 2;  // Take camera position, add focal length as how deep is the viewport, then move left and up (u is towards right and v is towards down)
 		startingPixel = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);  // Use upper left corner and move half U delta and half V delta
+	}
+
+	Ray getRandomRayForPixel(int i, int j) {
+		auto pixelCenter = startingPixel + (i * pixelDeltaU) + (j * pixelDeltaV);
+		auto samplePoint = pixelCenter + randomPixelSampleOffset();
+
+		return Ray{ center, samplePoint - center };
+	}
+
+	Vec3 randomPixelSampleOffset() const {
+		double px = -0.5 + randomDouble();
+		double py = -0.5 + randomDouble();
+
+		return (px * pixelDeltaU) + (py * pixelDeltaV);
 	}
 
 	Color rayColor(const Ray& r, const Hittable& world) {

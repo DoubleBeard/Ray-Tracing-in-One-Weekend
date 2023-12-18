@@ -2,6 +2,19 @@
 //
 
 #include "main.h"
+#include "vec3.h"
+#include "ray.h"
+#include "color.h"
+#include "sphere.h"
+#include "hittable.h"
+#include "hittable_list.h"
+#include "interval.h"
+#include "camera.h"
+
+#include <memory>
+#include <iostream>
+#include <fstream>
+#include <filesystem>
 
 const double ASPECT_RATIO = 16.0 / 9.0;
 const double SCALE = 1080;
@@ -26,6 +39,7 @@ int main()
 
 	mainCamera.aspectRatio = ASPECT_RATIO;
 	mainCamera.scale = SCALE;
+	mainCamera.samplesPerPixel = 10;
 	
 	mainCamera.render(world);
 }
