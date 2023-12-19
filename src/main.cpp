@@ -1,4 +1,4 @@
-// RayTracingInOneWeekend.cpp : Defines the entry point for the application.
+﻿// RayTracingInOneWeekend.cpp : Defines the entry point for the application.
 //
 
 #include "main.h"
@@ -21,11 +21,7 @@ const double SCALE = 1080;
 
 
 void populateWorld(HittableList& world) {
-	world.add(make_shared<Sphere>(Point(0, 0.5, -1), 0.25));
-	world.add(make_shared<Sphere>(Point(0, -0.5, -1), 0.25));
-	world.add(make_shared<Sphere>(Point(0.5, 0, -1), 0.25));
-	world.add(make_shared<Sphere>(Point(0, 0, -5), 0.25));
-	world.add(make_shared<Sphere>(Point(-0.5, 0, -1), 0.25));
+	world.add(make_shared<Sphere>(Point(0, 0, -1), 0.5));
 	world.add(make_shared<Sphere>(Point(0, -100.5, -1), 100));
 }
 
