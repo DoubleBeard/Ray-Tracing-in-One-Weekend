@@ -25,7 +25,7 @@ public:
 				Color pixelColor{ 0, 0, 0 };
 
 				for (int sample = 0; sample < samplesPerPixel; sample++) {
-					pixelColor += rayColor(getRandomRayForPixel(i, j), world);
+					pixelColor += rayColor(getRandomRayForPixel(i, j), maxDepth, world);
 				}
 
 				int index = (j * imageWidth + i) * channels;
@@ -91,11 +91,16 @@ private:
 		return (px * pixelDeltaU) + (py * pixelDeltaV);
 	}
 
-	Color rayColor(const Ray& r, const Hittable& world) {
+	Color rayColor(const Ray& r, int maxDepth, const Hittable& world) {
 		RayHit rec{};
 
-		if (world.hit(r, Interval(0, DOUBLE_INFINITY), rec)) {
-			return 0.5 * (rec.normal + Vec3::one());
+		if (maxDepth == 0) {
+			return Color(0, 0, 0);
+		}
+
+		if (world.hit(r, Interval(0.001, DOUBLE_INFINITY), rec)) {
+			Vec3 direction = randomOnHemisphere(rec.normal);
+			return 0.5 * rayColor(Ray(rec.p, direction), maxDepth - 1 , world);
 		}
 
 		auto unitDirection = unitVector(r.direction());
