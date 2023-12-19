@@ -30,12 +30,16 @@ public:
 		e[0] += v.x();
 		e[1] += v.y();
 		e[2] += v.z();
+
+		return *this;
 	}
 
 	Vec3& operator*=(double const t) {
 		e[0] *= t;
 		e[1] *= t;
 		e[2] *= t;
+
+		return *this;
 	}
 
 	Vec3& operator/=(double const t) {
@@ -56,6 +60,14 @@ public:
 
 	static Vec3 one() {
 		return Vec3(1, 1, 1);
+	}
+
+	static Vec3 random() {
+		return Vec3(randomDouble(), randomDouble(), randomDouble());
+	}
+
+	static Vec3 random(double min, double max) {
+		return Vec3(randomDouble(min, max), randomDouble(min, max), randomDouble(min, max));
 	}
 
 private:
@@ -111,4 +123,26 @@ inline Vec3 unitVector(const Vec3& v) {
 
 inline Vec3 copyVector(const Vec3& v) {
 	return Vec3(v.x(), v.y(), v.z());
+}
+
+inline Vec3 randomInUnitSphere() {
+	while (true) {
+		auto p = Vec3::random(-1, 1);
+		if (p.lengthSquared() < 1) {
+			return p;
+		}
+	}
+}
+
+inline Vec3 randomUnitVector() {
+	return unitVector(randomInUnitSphere());
+}
+
+inline Vec3 randomOnHemisphere(const Vec3& normal) {
+	Vec3 onUnitSphere = randomUnitVector();
+
+	if (dot(onUnitSphere, normal) > 0.0) {
+		return onUnitSphere;
+	}
+	return -onUnitSphere;
 }

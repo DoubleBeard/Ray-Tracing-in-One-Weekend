@@ -1,4 +1,4 @@
-﻿// RayTracingInOneWeekend.cpp : Defines the entry point for the application.
+// RayTracingInOneWeekend.cpp : Defines the entry point for the application.
 //
 
 #include "main.h"
@@ -39,7 +39,8 @@ int main()
 
 	mainCamera.aspectRatio = ASPECT_RATIO;
 	mainCamera.scale = SCALE;
-	mainCamera.samplesPerPixel = 10;
+	mainCamera.samplesPerPixel = 100;
+	mainCamera.maxDepth = 50;
 	
 	mainCamera.render(world);
 }

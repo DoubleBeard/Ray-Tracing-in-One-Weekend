@@ -13,6 +13,7 @@ public:
 	double aspectRatio = 1.0;
 	double scale = 100;
 	int samplesPerPixel = 10;
+	int maxDepth = 10;
 
 	void render(const Hittable& world) {
 		initialize();
