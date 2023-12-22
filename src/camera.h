@@ -99,7 +99,7 @@ private:
 		}
 
 		if (world.hit(r, Interval(0.001, DOUBLE_INFINITY), rec)) {
-			Vec3 direction = randomOnHemisphere(rec.normal);
+			Vec3 direction = rec.normal + randomUnitVector();
 			return 0.5 * rayColor(Ray(rec.p, direction), maxDepth - 1 , world);
 		}
 
