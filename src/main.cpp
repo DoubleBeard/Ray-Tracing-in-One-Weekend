@@ -35,7 +35,7 @@ int main()
 
 	mainCamera.aspectRatio = ASPECT_RATIO;
 	mainCamera.scale = SCALE;
-	mainCamera.samplesPerPixel = 100;
+	mainCamera.samplesPerPixel = 30;
 	mainCamera.maxDepth = 50;
 	
 	mainCamera.render(world);
