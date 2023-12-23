@@ -22,8 +22,8 @@ const double SCALE = 1080;
 void populateWorld(HittableList& world) {
 	shared_ptr<Material> redLambertian = make_shared<Lambertian>(Color(0.8, 0, 0));
 	shared_ptr<Material> greenLambertian = make_shared<Lambertian>(Color(0, 0.8, 0));
-	shared_ptr<Material> silverMetal = make_shared<Metal>(Color(0.5, 0.5, 0.5));
-	shared_ptr<Material> yellowTintMetal = make_shared<Metal>(Color(0.8, 0.8, 0));
+	shared_ptr<Material> silverMetal = make_shared<Metal>(Color(0.5, 0.5, 0.5), 0.2);
+	shared_ptr<Material> yellowTintMetal = make_shared<Metal>(Color(0.8, 0.8, 0), 0.8);
 
 	// Base Lambertian speheres
 	world.add(make_shared<Sphere>(Point(0, 0, -1), 0.5, redLambertian));
@@ -44,8 +44,8 @@ int main()
 
 	mainCamera.aspectRatio = ASPECT_RATIO;
 	mainCamera.scale = SCALE;
-	mainCamera.samplesPerPixel = 30;
-	mainCamera.maxDepth = 50;
+	mainCamera.samplesPerPixel = 100;
+	mainCamera.maxDepth = 10;
 	
 	mainCamera.render(world);
 }
