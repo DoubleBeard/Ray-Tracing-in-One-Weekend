@@ -22,8 +22,16 @@ const double SCALE = 1080;
 void populateWorld(HittableList& world) {
 	shared_ptr<Material> redLambertian = make_shared<Lambertian>(Color(0.8, 0, 0));
 	shared_ptr<Material> greenLambertian = make_shared<Lambertian>(Color(0, 0.8, 0));
+	shared_ptr<Material> silverMetal = make_shared<Metal>(Color(0.5, 0.5, 0.5));
+	shared_ptr<Material> yellowTintMetal = make_shared<Metal>(Color(0.8, 0.8, 0));
+
+	// Base Lambertian speheres
 	world.add(make_shared<Sphere>(Point(0, 0, -1), 0.5, redLambertian));
 	world.add(make_shared<Sphere>(Point(0, -100.5, -1), 100, greenLambertian));
+	
+	// Metal spheres
+	world.add(make_shared<Sphere>(Point(-1.2, 0, -1), 0.5, silverMetal));
+	world.add(make_shared<Sphere>(Point(1.2, 0, -1), 0.5, yellowTintMetal));
 }
 
 
