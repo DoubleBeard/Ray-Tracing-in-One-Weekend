@@ -16,22 +16,26 @@
 #include <filesystem>	
 
 const double ASPECT_RATIO = 16.0 / 9.0;
-const double SCALE = 1080;
+const double SCALE = 400;
 
 
 void populateWorld(HittableList& world) {
-	shared_ptr<Material> redLambertian = make_shared<Lambertian>(Color(0.8, 0, 0));
-	shared_ptr<Material> greenLambertian = make_shared<Lambertian>(Color(0, 0.8, 0));
-	shared_ptr<Material> silverMetal = make_shared<Metal>(Color(0.5, 0.5, 0.5), 0.2);
-	shared_ptr<Material> yellowTintMetal = make_shared<Metal>(Color(0.8, 0.8, 0), 0.8);
+	auto redLambertian = make_shared<Lambertian>(Color(0.8, 0, 0));
+	auto greenLambertian = make_shared<Lambertian>(Color(0, 0.8, 0));
+	auto silverMetal = make_shared<Metal>(Color(0.5, 0.5, 0.5), 0.2);
+	auto yellowTintMetal = make_shared<Metal>(Color(0.8, 0.8, 0), 0.8);
+	auto glass = make_shared<Dielectric>(1.5);
 
-	// Base Lambertian speheres
+	// Base Lambertian Speheres
 	world.add(make_shared<Sphere>(Point(0, 0, -1), 0.5, redLambertian));
 	world.add(make_shared<Sphere>(Point(0, -100.5, -1), 100, greenLambertian));
 	
-	// Metal spheres
+	// Metal Spheres
 	world.add(make_shared<Sphere>(Point(-1.2, 0, -1), 0.5, silverMetal));
-	world.add(make_shared<Sphere>(Point(1.2, 0, -1), 0.5, yellowTintMetal));
+
+	// Glass Speheres
+	world.add(make_shared<Sphere>(Point(1.2, 0, -1), 0.5, glass));
+	world.add(make_shared<Sphere>(Point(1.2, 0, -1), -0.4, glass));				// Makes the glass sphere hollow
 }
 
 

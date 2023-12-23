@@ -159,3 +159,10 @@ inline Vec3 randomOnHemisphere(const Vec3& normal) {
 Vec3 reflect(const Vec3& v, const Vec3& n) {
 	return v - 2 * dot(v, n) * n;
 }
+
+inline Vec3 refract(const Vec3& uv, const Vec3& n, double etaiOverEtat) {
+	double cosTheta = fmin(dot(-uv, n), 1.0);
+	Vec3 rOutPrep = etaiOverEtat * (uv + cosTheta * n);
+	Vec3 rOutParallel = -sqrt(fabs(1.0 - rOutPrep.lengthSquared())) * n;
+	return rOutPrep + rOutParallel;
+}
