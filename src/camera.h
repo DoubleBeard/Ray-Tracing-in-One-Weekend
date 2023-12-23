@@ -1,9 +1,9 @@
 #pragma once
 
 #include "main.h"
-
 #include "color.h"
 #include "hittable.h"
+#include "material.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "third-party/stb/stb_image_write.h"
@@ -99,8 +99,15 @@ private:
 		}
 
 		if (world.hit(r, Interval(0.001, DOUBLE_INFINITY), rec)) {
-			Vec3 direction = rec.normal + randomUnitVector();
-			return 0.5 * rayColor(Ray(rec.p, direction), maxDepth - 1 , world);
+			Ray scatterRay;
+			Color attenuation;
+
+			if (rec.material->scatter(r, rec, attenuation, scatterRay)) {
+				return attenuation * rayColor(scatterRay, maxDepth - 1, world);
+			}
+
+			// No need for scattering
+			return Color(0, 0, 0);
 		}
 
 		auto unitDirection = unitVector(r.direction());

@@ -1,5 +1,8 @@
 #pragma once
 
+
+#include "main.h"
+
 #include <cmath>
 #include <iostream>
 
@@ -53,6 +56,11 @@ public:
 	double lengthSquared() const {
 		return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
 	}
+	
+	bool isNearZero() {
+		double s = 1e-8;
+		return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
+	}
 
 	static Vec3 zero() {
 		return Vec3();
@@ -69,6 +77,7 @@ public:
 	static Vec3 random(double min, double max) {
 		return Vec3(randomDouble(min, max), randomDouble(min, max), randomDouble(min, max));
 	}
+
 
 private:
 	double e[3];

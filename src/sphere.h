@@ -5,7 +5,7 @@
 
 class Sphere : public Hittable {
 public: 
-	Sphere(Point _center, double _radius) : center(_center), radius(_radius) {}
+	Sphere(Point _center, double _radius, shared_ptr<Material> _material) : center(_center), radius(_radius), material(_material) {}
 
 	bool hit(const Ray& r, Interval rayT, RayHit& rec) const override{
 		Vec3 oc = r.origin() - center;
@@ -33,11 +33,12 @@ public:
 		rec.p = r.at(root);
 		Vec3 outwardsNormal = (rec.p - center) / radius;  // Vector From Center to P normalized (Same as calling unitVector, but more efficient since the length is known to be the radius)
 		rec.setFaceNormal(r, outwardsNormal);
-		
+		rec.material = material;
 		return true;
 	}
 
 private:
 	Point center;
 	double radius;
+	shared_ptr<Material> material;
 };

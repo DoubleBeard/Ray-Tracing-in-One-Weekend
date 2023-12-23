@@ -3,10 +3,15 @@
 #include "ray.h"
 #include "interval.h"
 
+#include <memory>
+
+class Material;
+
 class RayHit {
 public:
 	Point p;
 	Vec3 normal;
+	shared_ptr<Material> material;
 	double t;
 	bool facingFront;
 
