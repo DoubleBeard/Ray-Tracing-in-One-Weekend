@@ -15,6 +15,15 @@ public:
 	int samplesPerPixel = 10;
 	int maxDepth = 10;
 
+	double vFov = 90;
+	Point lookFrom = Point(0, 0, -1);
+	Point lookAt = Point(0, 0, 0);
+	Vec3 vUp = Vec3(0, 1, 0);
+
+	double defocusAngle = 0;
+	double focusDist = 10;
+
+
 	void render(const Hittable& world) {
 		initialize();
 
@@ -49,6 +58,10 @@ private:
 
 	Vec3 pixelDeltaU;
 	Vec3 pixelDeltaV;
+	Vec3 u, v, w;
+
+	Vec3 defocusDiskU;
+	Vec3 defocusDiskV;
 
 
 
@@ -61,27 +74,40 @@ private:
 
 		channels = 3;
 
-		center = Point(0, 0, 0);
+		center = lookFrom;
 
-		float focalLength = 1.0;
-		double viewportHeight = 2.0;
+		double theta = degToRads(vFov);
+		double h = tan(theta / 2);
+		double viewportHeight = 2 * h * focusDist;
 		double viewportWidth = viewportHeight * (static_cast<double>(imageWidth) / imageHeight);
 
-		auto viewportU = Vec3(viewportWidth, 0, 0);
-		auto viewportV = Vec3(0, -viewportHeight, 0);
+		// Calculate u, v, w, unit basis vectors for the camera coordinate frame.
+		w = unitVector(lookFrom - lookAt);
+		u = unitVector(cross(vUp, w));
+		v = cross(w, u);
+
+		auto viewportU = viewportWidth * u;
+		auto viewportV = viewportHeight * -v;
 
 		pixelDeltaU = viewportU / imageWidth;
 		pixelDeltaV = viewportV / imageHeight;
 
-		auto viewportUpperLeft = center - Vec3(0, 0, focalLength) - viewportU / 2 - viewportV / 2;  // Take camera position, add focal length as how deep is the viewport, then move left and up (u is towards right and v is towards down)
+		auto viewportUpperLeft = center - (focusDist * w) - viewportU / 2 - viewportV / 2;  // Take camera position, add focal length as how deep is the viewport, then move left and up (u is towards right and v is towards down)
 		startingPixel = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);  // Use upper left corner and move half U delta and half V delta
+
+		auto defocusRadius = focusDist * tan(degToRads(defocusAngle / 2));
+		defocusDiskU = u * defocusRadius;
+		defocusDiskV = v * defocusRadius;
 	}
 
 	Ray getRandomRayForPixel(int i, int j) {
 		auto pixelCenter = startingPixel + (i * pixelDeltaU) + (j * pixelDeltaV);
 		auto samplePoint = pixelCenter + randomPixelSampleOffset();
 
-		return Ray{ center, samplePoint - center };
+		auto rayOrigin = (defocusAngle <= 0) ? center : defocusDiskSample();
+		auto rayDirection = samplePoint - rayOrigin;
+
+		return Ray{ rayOrigin, rayDirection };
 	}
 
 	Vec3 randomPixelSampleOffset() const {
@@ -89,6 +115,11 @@ private:
 		double py = -0.5 + randomDouble();
 
 		return (px * pixelDeltaU) + (py * pixelDeltaV);
+	}
+
+	Point defocusDiskSample() const {
+		auto p = randomInUnitDisk();
+		return center + (p[0] * defocusDiskU) + (p[1] * defocusDiskV);
 	}
 
 	Color rayColor(const Ray& r, int maxDepth, const Hittable& world) {

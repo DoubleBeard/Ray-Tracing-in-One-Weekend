@@ -143,6 +143,15 @@ inline Vec3 randomInUnitSphere() {
 	}
 }
 
+inline Vec3 randomInUnitDisk() {
+	while (true) {
+		auto p = Vec3(randomDouble(-1, 1), randomDouble(-1, 1), 0);
+		if (p.lengthSquared() < 1) {
+			return p;
+		}
+	}
+}
+
 inline Vec3 randomUnitVector() {
 	return unitVector(randomInUnitSphere());
 }
@@ -156,7 +165,7 @@ inline Vec3 randomOnHemisphere(const Vec3& normal) {
 	return -onUnitSphere;
 }
 
-Vec3 reflect(const Vec3& v, const Vec3& n) {
+inline Vec3 reflect(const Vec3& v, const Vec3& n) {
 	return v - 2 * dot(v, n) * n;
 }
 
