@@ -15,41 +15,66 @@
 #include <fstream>
 #include <filesystem>	
 
-const double ASPECT_RATIO = 16.0 / 9.0;
-const double SCALE = 400;
 
-
-void populateWorld(HittableList& world) {
-	auto redLambertian = make_shared<Lambertian>(Color(0.8, 0, 0));
-	auto greenLambertian = make_shared<Lambertian>(Color(0, 0.8, 0));
-	auto silverMetal = make_shared<Metal>(Color(0.5, 0.5, 0.5), 0.2);
-	auto yellowTintMetal = make_shared<Metal>(Color(0.8, 0.8, 0), 0.8);
-	auto glass = make_shared<Dielectric>(1.5);
-
-	// Base Lambertian Speheres
-	world.add(make_shared<Sphere>(Point(0, 0, -1), 0.5, redLambertian));
-	world.add(make_shared<Sphere>(Point(0, -100.5, -1), 100, greenLambertian));
-	
-	// Metal Spheres
-	world.add(make_shared<Sphere>(Point(-1.2, 0, -1), 0.5, silverMetal));
-
-	// Glass Speheres
-	world.add(make_shared<Sphere>(Point(1.2, 0, -1), 0.5, glass));
-	world.add(make_shared<Sphere>(Point(1.2, 0, -1), -0.4, glass));				// Makes the glass sphere hollow
-}
-
-
-int main()
-{
+int main() {
 	HittableList world;
-	populateWorld(world);
 
-	Camera mainCamera;
+	auto ground_material = make_shared<Lambertian>(Color(0.5, 0.5, 0.5));
+	world.add(make_shared<Sphere>(Point(0, -1000, 0), 1000, ground_material));
 
-	mainCamera.aspectRatio = ASPECT_RATIO;
-	mainCamera.scale = SCALE;
-	mainCamera.samplesPerPixel = 100;
-	mainCamera.maxDepth = 10;
-	
-	mainCamera.render(world);
+	for (int a = -11; a < 11; a++) {
+		for (int b = -11; b < 11; b++) {
+			auto choose_mat = randomDouble();
+			Point center(a + 0.9 * randomDouble(), 0.2, b + 0.9 * randomDouble());
+
+			if ((center - Point(4, 0.2, 0)).length() > 0.9) {
+				shared_ptr<Material> sphere_material;
+
+				if (choose_mat < 0.8) {
+					// diffuse
+					auto albedo = Color::random() * Color::random();
+					sphere_material = make_shared<Lambertian>(albedo);
+					world.add(make_shared<Sphere>(center, 0.2, sphere_material));
+				}
+				else if (choose_mat < 0.95) {
+					// metal
+					auto albedo = Color::random(0.5, 1);
+					auto fuzz = randomDouble(0, 0.5);
+					sphere_material = make_shared<Metal>(albedo, fuzz);
+					world.add(make_shared<Sphere>(center, 0.2, sphere_material));
+				}
+				else {
+					// glass
+					sphere_material = make_shared<Dielectric>(1.5);
+					world.add(make_shared<Sphere>(center, 0.2, sphere_material));
+				}
+			}
+		}
+	}
+
+	auto material1 = make_shared<Dielectric>(1.5);
+	world.add(make_shared<Sphere>(Point(0, 1, 0), 1.0, material1));
+
+	auto material2 = make_shared<Lambertian>(Color(0.4, 0.2, 0.1));
+	world.add(make_shared<Sphere>(Point(-4, 1, 0), 1.0, material2));
+
+	auto material3 = make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0);
+	world.add(make_shared<Sphere>(Point(4, 1, 0), 1.0, material3));
+
+	Camera cam;
+
+	cam.aspectRatio = 16.0 / 9.0;
+	cam.scale = 1200;
+	cam.samplesPerPixel = 500;
+	cam.maxDepth = 50;
+
+	cam.vFov = 20;
+	cam.lookFrom = Point(13, 2, 3);
+	cam.lookAt = Point(0, 0, 0);
+	cam.vUp = Vec3(0, 1, 0);
+
+	cam.defocusAngle = 0.6;
+	cam.focusDist = 10.0;
+
+	cam.render(world);
 }
